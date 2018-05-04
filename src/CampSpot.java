@@ -3,7 +3,7 @@
  */
 import java.util.UUID;
 public class CampSpot {
-    int campSpotID;
+    UUID campSpotID;
     int parkingSpace;
     int recommendedPeople;
     int tentSpace;
@@ -14,7 +14,7 @@ public class CampSpot {
         campSpotID = UUID.randomUUID();
     }
 
-    public int getCampSpotID() {
+    public UUID getCampSpotID() {
         return campSpotID;
     }
 
