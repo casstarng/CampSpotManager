@@ -42,7 +42,7 @@ public class CampSpotManager {
         campSpotPanel.setPreferredSize(new Dimension(300, 300));
         campSpotPanel.setLayout(new GridLayout(6, 8, 5, 50));
 
-        Color firColor = new Color(12, 255, 23);
+        Color firColor = Color.GREEN;
 
         JButton[] seats = new JButton[campSpots.size()];
 
@@ -57,9 +57,17 @@ public class CampSpotManager {
             seats[i].addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
-                    ((JButton) e.getSource()).setBackground(Color.BLACK);
-                    String text = ((JButton) e.getSource()).getText();
-                    System.out.println(text);
+                    // Select
+                    if (((JButton) e.getSource()).getBackground() == Color.GREEN){
+                        ((JButton) e.getSource()).setBackground(Color.decode("#80bfff"));
+                    }
+                    // Deselect
+                    else{
+                        ((JButton) e.getSource()).setBackground(Color.GREEN);
+                    }
+                    String label = ((JButton) e.getSource()).getText();
+                    CampSpot selectedSpot = getCampSpot(label);
+                    System.out.println(selectedSpot.getPrice());
                 }
             });
         }
@@ -75,16 +83,23 @@ public class CampSpotManager {
             campSpots.add(new CampSpot("FB" + i, 1, 4, 1, 30, false));
         }
         for(int i = 1; i < 9; i++){
-            campSpots.add(new CampSpot("GA" + i, 1, 4, 1, 30, false));
+            campSpots.add(new CampSpot("GA" + i, 2, 8, 2, 50, false));
         }
         for(int i = 1; i < 9; i++){
-            campSpots.add(new CampSpot("GB" + i, 1, 4, 1, 30, false));
+            campSpots.add(new CampSpot("GB" + i, 2, 8, 3, 50, false));
         }
         for(int i = 1; i < 9; i++){
-            campSpots.add(new CampSpot("HA" + i, 1, 4, 1, 30, false));
+            campSpots.add(new CampSpot("HA" + i, 3, 12, 4, 65, true));
         }
         for(int i = 1; i < 9; i++){
-            campSpots.add(new CampSpot("HB" + i, 1, 4, 1, 30, false));
+            campSpots.add(new CampSpot("HB" + i, 3, 12, 5, 65, true));
         }
+    }
+
+    public CampSpot getCampSpot(String label){
+        for (int i = 0; i < campSpots.size(); i++){
+            if (campSpots.get(i).getLabel().equals(label)) return campSpots.get(i);
+        }
+        return null;
     }
 }
