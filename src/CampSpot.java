@@ -4,13 +4,20 @@
 import java.util.UUID;
 public class CampSpot {
     UUID campSpotID;
+    String label;
     int parkingSpace;
     int recommendedPeople;
     int tentSpace;
     double price;
     boolean handicap;
 
-    public CampSpot() {
+    public CampSpot(String label, int parkingSpace, int recommendedPeople, int tentSpace, double price, boolean handicap) {
+        this.label = label;
+        this.parkingSpace = parkingSpace;
+        this.recommendedPeople = recommendedPeople;
+        this.tentSpace = tentSpace;
+        this.price = price;
+        this.handicap = handicap;
         campSpotID = UUID.randomUUID();
     }
 
@@ -56,5 +63,9 @@ public class CampSpot {
 
     public void setTentSpace(int tentSpace) {
         this.tentSpace = tentSpace;
+    }
+
+    public String getLabel() {
+        return label;
     }
 }

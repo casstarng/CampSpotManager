@@ -3,13 +3,17 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 /**
  * Created by Cassidy Tarng on 5/4/2018.
  */
 public class CampSpotManager {
 
+    ArrayList<CampSpot> campSpots = new ArrayList<>();
+
     CampSpotManager(){
+        initializeCamp();
         drawScreen();
     }
 
@@ -40,15 +44,10 @@ public class CampSpotManager {
 
         Color firColor = new Color(12, 255, 23);
 
-        String[] lblFir1 = { "FA1", "FA2", "FA3", "FA4","FA5", "FA6", "FA7", "FA8",
-                "FB1", "FB2", "FB3", "FB4","FB5", "FB6", "FB7", "FB8",
-                "GA1", "GA2", "GA3", "GA4","GA5", "GA6", "GA7", "GA8",
-                "GB1", "GB2", "GB3", "GB4","GB5", "GB6", "GB7", "GB8",
-                "HA1", "HA2", "HA3", "HA4","HA5", "HA6", "HA7", "HA8",
-                "HB1", "HB2", "HB3", "HB4","HB5", "HB6", "HB7", "HB8"};
-        JButton[] seats = new JButton[lblFir1.length];
+        JButton[] seats = new JButton[campSpots.size()];
+
         for (int i = 0; i < seats.length; i++) {
-            seats[i] = new JButton(lblFir1[i]);
+            seats[i] = new JButton(campSpots.get(i).getLabel());
             seats[i].setBackground(firColor);
             seats[i].setOpaque(true);
             seats[i].setBorder(null);
@@ -65,8 +64,27 @@ public class CampSpotManager {
             });
         }
 
-
-
         return campSpotPanel;
+    }
+
+    public void initializeCamp(){
+        for(int i = 1; i < 9; i++){
+            campSpots.add(new CampSpot("FA" + i, 1, 4, 1, 30, false));
+        }
+        for(int i = 1; i < 9; i++){
+            campSpots.add(new CampSpot("FB" + i, 1, 4, 1, 30, false));
+        }
+        for(int i = 1; i < 9; i++){
+            campSpots.add(new CampSpot("GA" + i, 1, 4, 1, 30, false));
+        }
+        for(int i = 1; i < 9; i++){
+            campSpots.add(new CampSpot("GB" + i, 1, 4, 1, 30, false));
+        }
+        for(int i = 1; i < 9; i++){
+            campSpots.add(new CampSpot("HA" + i, 1, 4, 1, 30, false));
+        }
+        for(int i = 1; i < 9; i++){
+            campSpots.add(new CampSpot("HB" + i, 1, 4, 1, 30, false));
+        }
     }
 }
