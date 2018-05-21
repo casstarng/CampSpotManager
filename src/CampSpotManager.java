@@ -26,9 +26,14 @@ public class CampSpotManager {
 
     public void drawScreen(){
         JPanel filterPanel = new JPanel();
-        filterPanel.setLayout(new GridLayout(2, 0));
+        filterPanel.setLayout(new GridLayout(3, 0, 0, 100));
         filterPanel.add(drawFilter());
         filterPanel.add(drawCampSpotInfo());
+
+        JPanel nextPage = new JPanel();
+        nextPage.add(new JButton("Previous"));
+        nextPage.add(new JButton("Next"));
+        filterPanel.add(nextPage);
 
         JFrame frame = new JFrame();
         frame.setLayout(new GridLayout(0, 2));
@@ -93,7 +98,7 @@ public class CampSpotManager {
 
     public JPanel drawFilter(){
         JPanel jPanel = new JPanel();
-        jPanel.setLayout(new GridLayout(5, 2, 0, 70));
+        jPanel.setLayout(new GridLayout(6, 2, 0, 10));
         // Recommended people
         String[] recommendedPeopleOptions = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "Over 10"};
         JLabel recommendedPeople = new JLabel("People in Party: ");
@@ -127,6 +132,9 @@ public class CampSpotManager {
         JComboBox handicapBox = new JComboBox(handicapOptions);
         jPanel.add(handicap);
         jPanel.add(handicapBox);
+
+        JButton filterButton = new JButton("Filter");
+        jPanel.add(filterButton);
 
         return jPanel;
     }
