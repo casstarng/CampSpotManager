@@ -11,6 +11,13 @@ import java.util.ArrayList;
 public class CampSpotManager {
 
     ArrayList<CampSpot> campSpots = new ArrayList<>();
+    String previousClickedCampLabel;
+    JLabel label = new JLabel();
+    JLabel parkingSpace = new JLabel();
+    JLabel recommendedPeople = new JLabel();
+    JLabel tentSpace = new JLabel();
+    JLabel price = new JLabel();
+    JLabel handicap = new JLabel();
 
     CampSpotManager(){
         initializeCamp();
@@ -23,6 +30,8 @@ public class CampSpotManager {
         JButton previousButton = new JButton("Previous");
         filterPanel.add(nextButton);
         filterPanel.add(previousButton);
+        JPanel infoPanel = drawCampSpotInfo();
+        filterPanel.add(infoPanel);
 
         JFrame frame = new JFrame();
         frame.setLayout(new GridLayout(0, 2));
@@ -59,20 +68,48 @@ public class CampSpotManager {
                 public void actionPerformed(ActionEvent e) {
                     // Select
                     if (((JButton) e.getSource()).getBackground() == Color.GREEN){
+                        // Makes previous selection green
+                        if (previousClickedCampLabel != null){
+                            int previousClickedIndex = getCampSpotIndex(previousClickedCampLabel);
+                            seats[previousClickedIndex].setBackground(Color.GREEN);
+                        }
+                        // Makes current selection blue
+                        String labelName = ((JButton) e.getSource()).getText();
+                        previousClickedCampLabel = labelName;
+                        CampSpot currentSpot = getCampSpot(labelName);
                         ((JButton) e.getSource()).setBackground(Color.decode("#80bfff"));
+
+                        // Set Camp Spot Info
+                        label.setText("Label: " + currentSpot.getLabel());
+                        parkingSpace.setText("Parking Spaces: " + currentSpot.getParkingSpace());
+                        recommendedPeople.setText("Recommended People: " + currentSpot.getRecommendedPeople());
+                        tentSpace.setText("Tent Spaces: " + currentSpot.getTentSpace());
+                        price.setText("Price: " + currentSpot.getPrice());
+                        handicap.setText("Handicap: " + currentSpot.isHandicap());
                     }
-                    // Deselect
-                    else{
-                        ((JButton) e.getSource()).setBackground(Color.GREEN);
-                    }
-                    String label = ((JButton) e.getSource()).getText();
-                    CampSpot selectedSpot = getCampSpot(label);
-                    System.out.println(selectedSpot.getPrice());
                 }
             });
         }
 
         return campSpotPanel;
+    }
+
+    public JPanel drawCampSpotInfo(){
+        JPanel jPanel = new JPanel();
+        jPanel.setLayout(new GridLayout(6, 1));
+        label.setText("Label: ---");
+        jPanel.add(label);
+        parkingSpace.setText("Parking Spaces: ---");
+        jPanel.add(parkingSpace);
+        recommendedPeople.setText("Recommended People: ---");
+        jPanel.add(recommendedPeople);
+        tentSpace.setText("Tent Spaces: ---");
+        jPanel.add(tentSpace);
+        price.setText("Price: ---");
+        jPanel.add(price);
+        handicap.setText("Handicap: ---");
+        jPanel.add(handicap);
+        return jPanel;
     }
 
     public void initializeCamp(){
@@ -101,5 +138,12 @@ public class CampSpotManager {
             if (campSpots.get(i).getLabel().equals(label)) return campSpots.get(i);
         }
         return null;
+    }
+
+    public int getCampSpotIndex(String label){
+        for (int i = 0; i < campSpots.size(); i++){
+            if (campSpots.get(i).getLabel().equals(label)) return i;
+        }
+        return 0;
     }
 }
