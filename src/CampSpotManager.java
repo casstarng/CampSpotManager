@@ -26,12 +26,9 @@ public class CampSpotManager {
 
     public void drawScreen(){
         JPanel filterPanel = new JPanel();
-        JButton nextButton = new JButton("Next");
-        JButton previousButton = new JButton("Previous");
-        filterPanel.add(nextButton);
-        filterPanel.add(previousButton);
-        JPanel infoPanel = drawCampSpotInfo();
-        filterPanel.add(infoPanel);
+        filterPanel.setLayout(new GridLayout(2, 0));
+        filterPanel.add(drawFilter());
+        filterPanel.add(drawCampSpotInfo());
 
         JFrame frame = new JFrame();
         frame.setLayout(new GridLayout(0, 2));
@@ -92,6 +89,46 @@ public class CampSpotManager {
         }
 
         return campSpotPanel;
+    }
+
+    public JPanel drawFilter(){
+        JPanel jPanel = new JPanel();
+        jPanel.setLayout(new GridLayout(5, 2, 0, 70));
+        // Recommended people
+        String[] recommendedPeopleOptions = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "Over 10"};
+        JLabel recommendedPeople = new JLabel("People in Party: ");
+        JComboBox recommendedPeopleBox = new JComboBox(recommendedPeopleOptions);
+        jPanel.add(recommendedPeople);
+        jPanel.add(recommendedPeopleBox);
+
+        // Parking spaces
+        String[] parkingSpaceOptions = {"1", "2", "3"};
+        JLabel parkingSpace = new JLabel("Vehicles: ");
+        JComboBox parkingSpaceBox = new JComboBox(parkingSpaceOptions);
+        jPanel.add(parkingSpace);
+        jPanel.add(parkingSpaceBox);
+
+        // Tent spaces
+        String[] tentSpaceOptions = {"1", "2", "3"};
+        JLabel tentSpace = new JLabel("Tents: ");
+        JComboBox tentSpaceBox = new JComboBox(tentSpaceOptions);
+        jPanel.add(tentSpace);
+        jPanel.add(tentSpaceBox);
+
+        // Price
+        JLabel price = new JLabel("Below Price: ");
+        JTextField priceField = new JTextField("", 5);
+        jPanel.add(price);
+        jPanel.add(priceField);
+
+        // Handicap
+        String[] handicapOptions = {"Y", "N"};
+        JLabel handicap = new JLabel("Handicap: ");
+        JComboBox handicapBox = new JComboBox(handicapOptions);
+        jPanel.add(handicap);
+        jPanel.add(handicapBox);
+
+        return jPanel;
     }
 
     public JPanel drawCampSpotInfo(){
