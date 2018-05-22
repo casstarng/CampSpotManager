@@ -19,32 +19,30 @@ public class CampSpotManager {
     JLabel price = new JLabel();
     JLabel handicap = new JLabel();
 
+    JPanel drawCampSpot = drawCampSpots();
+    JFrame frame = new JFrame();
+    JPanel sidePanel = new JPanel();
+
+
     CampSpotManager(){
         initializeCamp();
         drawScreen();
     }
 
     public void drawScreen(){
-        JPanel filterPanel = new JPanel();
-        filterPanel.setLayout(new GridLayout(3, 0, 0, 100));
-        filterPanel.add(drawFilter());
-        filterPanel.add(drawCampSpotInfo());
+        sidePanel = getSidePanel("1", "1", "1", 0.0, "Y");
 
-        JPanel nextPage = new JPanel();
-        nextPage.add(new JButton("Previous"));
-        nextPage.add(new JButton("Next"));
-        filterPanel.add(nextPage);
-
-        JFrame frame = new JFrame();
         frame.setLayout(new GridLayout(0, 2));
         frame.setTitle("Camp Spot Manager");
         frame.setSize(850, 850);
         frame.setVisible(true);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.add(drawCampSpots());
+        drawCampSpot = drawCampSpots();
 
-        frame.add(filterPanel);
+        frame.add(drawCampSpot);
+
+        frame.add(sidePanel);
 
     }
 
@@ -96,13 +94,27 @@ public class CampSpotManager {
         return campSpotPanel;
     }
 
-    public JPanel drawFilter(){
+    public JPanel getSidePanel(String people, String parking, String tent, Double prices, String handicaps){
+        JPanel filterPanel = new JPanel();
+        filterPanel.setLayout(new GridLayout(3, 0, 0, 100));
+        filterPanel.add(drawFilter(people, parking, tent, prices, handicaps));
+        filterPanel.add(drawCampSpotInfo());
+
+        JPanel nextPage = new JPanel();
+        nextPage.add(new JButton("Previous"));
+        nextPage.add(new JButton("Next"));
+        filterPanel.add(nextPage);
+        return filterPanel;
+    }
+
+    public JPanel drawFilter(String people, String parking, String tent, Double prices, String handicaps){
         JPanel jPanel = new JPanel();
         jPanel.setLayout(new GridLayout(6, 2, 0, 10));
         // Recommended people
         String[] recommendedPeopleOptions = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "Over 10"};
         JLabel recommendedPeople = new JLabel("People in Party: ");
         JComboBox recommendedPeopleBox = new JComboBox(recommendedPeopleOptions);
+        recommendedPeopleBox.setSelectedItem(people);
         jPanel.add(recommendedPeople);
         jPanel.add(recommendedPeopleBox);
 
@@ -110,6 +122,7 @@ public class CampSpotManager {
         String[] parkingSpaceOptions = {"1", "2", "3"};
         JLabel parkingSpace = new JLabel("Vehicles: ");
         JComboBox parkingSpaceBox = new JComboBox(parkingSpaceOptions);
+        parkingSpaceBox.setSelectedItem(parking);
         jPanel.add(parkingSpace);
         jPanel.add(parkingSpaceBox);
 
@@ -117,12 +130,14 @@ public class CampSpotManager {
         String[] tentSpaceOptions = {"1", "2", "3"};
         JLabel tentSpace = new JLabel("Tents: ");
         JComboBox tentSpaceBox = new JComboBox(tentSpaceOptions);
+        tentSpaceBox.setSelectedItem(tent);
         jPanel.add(tentSpace);
         jPanel.add(tentSpaceBox);
 
         // Price
         JLabel price = new JLabel("Below Price: ");
         JTextField priceField = new JTextField("", 5);
+        priceField.setText(prices.toString());
         jPanel.add(price);
         jPanel.add(priceField);
 
@@ -130,12 +145,37 @@ public class CampSpotManager {
         String[] handicapOptions = {"Y", "N"};
         JLabel handicap = new JLabel("Handicap: ");
         JComboBox handicapBox = new JComboBox(handicapOptions);
+        handicapBox.setSelectedItem(handicaps);
         jPanel.add(handicap);
         jPanel.add(handicapBox);
 
         JButton filterButton = new JButton("Filter");
         jPanel.add(filterButton);
 
+        filterButton.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                // Get filter Information
+                String people = recommendedPeopleBox.getSelectedItem().toString();
+                String parking = parkingSpaceBox.getSelectedItem().toString();
+                String tent = tentSpaceBox.getSelectedItem().toString();
+                //TODO: price Double checking
+                Double price = Double.parseDouble(priceField.getText());
+                String handicap = handicapBox.getSelectedItem().toString();
+
+                // Refresh CampSpots and CampSpotsInfo, keep same filter settings
+                frame.getContentPane().remove(drawCampSpot);
+                frame.getContentPane().remove(sidePanel);
+                drawCampSpot = drawCampSpots();
+                frame.add(drawCampSpot);
+                sidePanel = getSidePanel(people, parking, tent, price, handicap);
+                frame.add(sidePanel);
+                frame.getContentPane().invalidate();
+                frame.getContentPane().validate();
+
+            }
+        });
         return jPanel;
     }
 
