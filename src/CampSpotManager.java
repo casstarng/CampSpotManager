@@ -191,24 +191,30 @@ public class CampSpotManager {
         {
             public void actionPerformed(ActionEvent e)
             {
-                // Get filter Information
-                String people = recommendedPeopleBox.getSelectedItem().toString();
-                String parking = parkingSpaceBox.getSelectedItem().toString();
-                String tent = tentSpaceBox.getSelectedItem().toString();
-                //TODO: price Double checking
-                Double price = Double.parseDouble(priceField.getText());
-                String handicap = handicapBox.getSelectedItem().toString();
-                setFilter(people, parking ,tent, price, handicap);
+                try{
+                    // Get filter Information
+                    String people = recommendedPeopleBox.getSelectedItem().toString();
+                    String parking = parkingSpaceBox.getSelectedItem().toString();
+                    String tent = tentSpaceBox.getSelectedItem().toString();
+                    Double price;
+                    if (priceField.getText().equals("")) price = 0.0;
+                    else price = Double.parseDouble(priceField.getText());
+                    String handicap = handicapBox.getSelectedItem().toString();
+                    setFilter(people, parking ,tent, price, handicap);
 
-                // Refresh CampSpots and CampSpotsInfo, keep same filter settings
-                frame.getContentPane().remove(drawCampSpot);
-                frame.getContentPane().remove(sidePanel);
-                drawCampSpot = drawCampSpots();
-                frame.add(drawCampSpot);
-                sidePanel = getSidePanel(people, parking, tent, price, handicap);
-                frame.add(sidePanel);
-                frame.getContentPane().invalidate();
-                frame.getContentPane().validate();
+                    // Refresh CampSpots and CampSpotsInfo, keep same filter settings
+                    frame.getContentPane().remove(drawCampSpot);
+                    frame.getContentPane().remove(sidePanel);
+                    drawCampSpot = drawCampSpots();
+                    frame.add(drawCampSpot);
+                    sidePanel = getSidePanel(people, parking, tent, price, handicap);
+                    frame.add(sidePanel);
+                    frame.getContentPane().invalidate();
+                    frame.getContentPane().validate();
+                }
+                catch (NumberFormatException er){
+                    JOptionPane.showMessageDialog(frame, "Please enter a number in price");
+                }
 
             }
         });
