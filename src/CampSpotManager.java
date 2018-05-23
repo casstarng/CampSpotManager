@@ -3,7 +3,15 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 /**
  * Created by Cassidy Tarng on 5/4/2018.
@@ -28,9 +36,13 @@ public class CampSpotManager {
     String filterTent = " ";
     Double filterPrice = 0.0;
     String filterHandicap = " ";
+    JSONParser parser = new JSONParser();
 
+    CampSpotManager() throws IOException, ParseException {
+        Object obj = parser.parse(new FileReader("data\\CampSpotManager.json"));
+        JSONArray jsonArray = (JSONArray) obj;
+        System.out.println(jsonArray.size());
 
-    CampSpotManager(){
         initializeCamp();
         drawScreen();
     }
