@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,11 +39,7 @@ public class CampSpotManager {
     String filterHandicap = " ";
     JSONParser parser = new JSONParser();
 
-    CampSpotManager() throws IOException, ParseException {
-        Object obj = parser.parse(new FileReader("data\\CampSpotManager.json"));
-        JSONArray jsonArray = (JSONArray) obj;
-        System.out.println(jsonArray.size());
-
+    CampSpotManager(){
         initializeCamp();
         drawScreen();
     }
@@ -174,7 +171,7 @@ public class CampSpotManager {
         jPanel.add(parkingSpaceBox);
 
         // Tent spaces
-        String[] tentSpaceOptions = {" ", "1", "2", "3"};
+        String[] tentSpaceOptions = {" ", "1", "2", "3", "4", "5"};
         JLabel tentSpace = new JLabel("Tents: ");
         JComboBox tentSpaceBox = new JComboBox(tentSpaceOptions);
         tentSpaceBox.setSelectedItem(tent);
@@ -206,6 +203,7 @@ public class CampSpotManager {
                 try{
                     // Get filter Information
                     String people = recommendedPeopleBox.getSelectedItem().toString();
+                    if (people.equals("Over 10")) people = "10";
                     String parking = parkingSpaceBox.getSelectedItem().toString();
                     String tent = tentSpaceBox.getSelectedItem().toString();
                     Double price;
@@ -260,23 +258,25 @@ public class CampSpotManager {
     }
 
     public void initializeCamp(){
-        for(int i = 1; i < 9; i++){
-            campSpots.add(new CampSpot("FA" + i, 1, 4, 1, 30, false, true));
+        try{
+            Object obj = parser.parse(new FileReader("data\\CampSpotManager.json"));
+            JSONArray jsonArray = (JSONArray) obj;
+            System.out.println(jsonArray.size());
+            for (int i = 0; i < jsonArray.size(); i++){
+                JSONObject object = (JSONObject) jsonArray.get(i);
+                String label = object.get("label").toString();
+                int parking = Integer.parseInt(object.get("parkingSpace").toString());
+                int people = Integer.parseInt(object.get("recommendedPeople").toString());
+                int tent = Integer.parseInt(object.get("tentSpace").toString());
+                Double price = Double.parseDouble(object.get("price").toString());
+                boolean handicap = (Boolean) object.get("handicap");
+                boolean available = (Boolean) object.get("available");
+
+                campSpots.add(new CampSpot(label, parking, people, tent, price, handicap, available));
+            }
         }
-        for(int i = 1; i < 9; i++){
-            campSpots.add(new CampSpot("FB" + i, 1, 4, 1, 30, false, true));
-        }
-        for(int i = 1; i < 9; i++){
-            campSpots.add(new CampSpot("GA" + i, 2, 8, 2, 50, false, true));
-        }
-        for(int i = 1; i < 9; i++){
-            campSpots.add(new CampSpot("GB" + i, 2, 8, 3, 50, false, true));
-        }
-        for(int i = 1; i < 9; i++){
-            campSpots.add(new CampSpot("HA" + i, 3, 12, 4, 65, true, false));
-        }
-        for(int i = 1; i < 9; i++){
-            campSpots.add(new CampSpot("HB" + i, 3, 12, 5, 65, true, false));
+        catch(Exception e){
+            System.out.println(e);
         }
     }
 
