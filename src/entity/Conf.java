@@ -1,4 +1,4 @@
-/*created by Jing Li*/
+package entity;/*created by Jing Li*/
 
 public class Conf {
     public static String account;

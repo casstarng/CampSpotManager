@@ -1,4 +1,4 @@
-/*created by Jing Li*/
+package UTIL;/*created by Jing Li*/
 import java.awt.Component;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;

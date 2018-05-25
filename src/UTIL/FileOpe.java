@@ -1,4 +1,6 @@
-/*created by Jing Li*/
+package UTIL;/*created by Jing Li*/
+import entity.Conf;
+
 import java.io.FileReader;
 import java.io.PrintStream;
 import java.util.Properties;

@@ -1,3 +1,9 @@
+package login;
+
+import UTIL.GUIUtil;
+import entity.Conf;
+import login.ModifyDialog;
+
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,7 +19,7 @@ public class OperationFrame extends JFrame implements ActionListener {
     private JButton btModify=new JButton("Modify personal information");
     private JButton btExit=new JButton("Exit");
     public OperationFrame() {
-        super("Current login: "+Conf.account);
+        super("Current login: "+ Conf.account);
         this.setLayout(new GridLayout(4,1));
         this.add(lblWelcome);
         this.add(btQuery);
@@ -32,7 +38,7 @@ public class OperationFrame extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==btQuery) {
-        	//TODO use Reservation object
+        	//TODO use entity.Reservation object
             String message="Your reservations:\n";
             message+="UserID："+Conf.account+"\n";
             message+="Name："+Conf.name+"\n";

@@ -1,3 +1,7 @@
+package entity;
+
+import entity.User;
+
 import java.util.Date;
 
 /**
