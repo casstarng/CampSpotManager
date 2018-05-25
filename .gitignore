@@ -9,6 +9,7 @@
 .idea/
 .idea/vcs.xml
 .DS_Store
+.idea/workspace.xml
 # if you remove the above rule, at least ignore the following:
 
 # User-specific stuff:
