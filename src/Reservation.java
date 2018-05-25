@@ -1,7 +1,7 @@
 import java.util.Date;
 
 /**
- * Updated 5/23 by Sai Raghav
+ * Created by Cassidy Tarng on 5/4/2018.
  */
 public class Reservation {
     int reserveID;
@@ -9,38 +9,4 @@ public class Reservation {
     Date reserveTime;
     Date startTime;
     Date endTime;
-    User user;
-
-    public Reservation(int reserveID, int pricePerDay, Date reserveTime, Date startTime, Date endTime, User reservingUser) {
-        this.reserveID = reserveID;
-        this.pricePerDay = pricePerDay;
-        this.reserveTime = reserveTime;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.user = reservingUser;
-    }
-
-    public int getReserveID() {
-        return reserveID;
-    }
-
-    public int getPricePerDay() {
-        return pricePerDay;
-    }
-
-    public void setReserveTime(Date reserveTime) {
-        this.reserveTime = reserveTime;
-    }
-
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
-    }
-
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
-    }
-
-    public User getUser(User user) {
-        return user;
-    }
 }
