@@ -3,6 +3,7 @@ package login;
 import UTIL.FileOpe;
 import UTIL.GUIUtil;
 import entity.Conf;
+import home.HomeScreen;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -59,7 +60,7 @@ public class LoginFrame extends JFrame implements ActionListener {
             }
             JOptionPane.showMessageDialog(this,"Login successfully");
             this.dispose();
-            new OperationFrame();
+            new HomeScreen();
         }
         else if(e.getSource()==btRegister) {
             this.dispose();

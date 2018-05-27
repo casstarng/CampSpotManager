@@ -1,5 +1,6 @@
 package campspot;
 
+import UTIL.GUIUtil;
 import entity.CampSpot;
 
 import javax.swing.*;
@@ -27,7 +28,7 @@ public class CampSpotManager {
     JPanel sidePanel = new JPanel();
 
 
-    CampSpotManager(){
+    public CampSpotManager(){
         initializeCamp();
         drawScreen();
     }
@@ -46,6 +47,9 @@ public class CampSpotManager {
         frame.add(drawCampSpot);
 
         frame.add(sidePanel);
+
+        //To center this frame. add by Qi Wang
+        GUIUtil.toCenter(frame);
 
     }
 
