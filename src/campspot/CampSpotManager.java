@@ -2,11 +2,15 @@ package campspot;
 
 import UTIL.GUIUtil;
 import entity.CampSpot;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileReader;
 import java.util.ArrayList;
 
 /**
@@ -27,6 +31,12 @@ public class CampSpotManager {
     JFrame frame = new JFrame();
     JPanel sidePanel = new JPanel();
 
+    String filterPeople = " ";
+    String filterParking = " ";
+    String filterTent = " ";
+    Double filterPrice = 0.0;
+    String filterHandicap = " ";
+    JSONParser parser = new JSONParser();
 
     public CampSpotManager(){
         initializeCamp();
@@ -34,7 +44,7 @@ public class CampSpotManager {
     }
 
     public void drawScreen(){
-        sidePanel = getSidePanel("1", "1", "1", 0.0, "Y");
+        sidePanel = getSidePanel(" ", " ", " ", 0.0, " ");
 
         frame.setLayout(new GridLayout(0, 2));
         frame.setTitle("Camp Spot Manager");
@@ -48,7 +58,6 @@ public class CampSpotManager {
 
         frame.add(sidePanel);
 
-        //To center this frame. add by Qi Wang
         GUIUtil.toCenter(frame);
 
     }
@@ -63,8 +72,37 @@ public class CampSpotManager {
         JButton[] seats = new JButton[campSpots.size()];
 
         for (int i = 0; i < seats.length; i++) {
-            seats[i] = new JButton(campSpots.get(i).getLabel());
-            seats[i].setBackground(firColor);
+            CampSpot spot = campSpots.get(i);
+            seats[i] = new JButton(spot.getLabel());
+            // Disable if spot is unavailable
+            if (spot.getAvailability() == false) {
+                seats[i].setEnabled(false);
+                seats[i].setBackground(Color.LIGHT_GRAY);
+            }
+            // filter recommended people
+            else if ((!filterPeople.equals(" ") && spot.getRecommendedPeople() < Integer.parseInt(filterPeople)) ||
+                    // filter parking space
+                    (!filterParking.equals(" ") && spot.getParkingSpace() < Integer.parseInt(filterParking)) ||
+                    // filter tent
+                    (!filterTent.equals(" ") && spot.getTentSpace() < Integer.parseInt(filterTent)) ||
+                    // filter price
+                    (filterPrice != 0.0 && spot.getPrice() > filterPrice) ||
+                    // filter handicap
+                    (!filterHandicap.equals(" "))){
+
+                // filter handicap
+                if ((filterHandicap.equals("Y") && spot.isHandicap() == true) ||
+                        (filterHandicap.equals("N") && spot.isHandicap() == false)){
+                    seats[i].setBackground(firColor);
+                }
+                else {
+                    seats[i].setEnabled(false);
+                    seats[i].setBackground(Color.LIGHT_GRAY);
+                }
+            }
+            else{
+                seats[i].setBackground(firColor);
+            }
             seats[i].setOpaque(true);
             seats[i].setBorder(null);
             seats[i].setBorderPainted(false);
@@ -118,7 +156,7 @@ public class CampSpotManager {
         JPanel jPanel = new JPanel();
         jPanel.setLayout(new GridLayout(6, 2, 0, 10));
         // Recommended people
-        String[] recommendedPeopleOptions = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "Over 10"};
+        String[] recommendedPeopleOptions = {" ", "1", "2", "3", "4", "5", "6", "7", "8", "9", "Over 10"};
         JLabel recommendedPeople = new JLabel("People in Party: ");
         JComboBox recommendedPeopleBox = new JComboBox(recommendedPeopleOptions);
         recommendedPeopleBox.setSelectedItem(people);
@@ -126,7 +164,7 @@ public class CampSpotManager {
         jPanel.add(recommendedPeopleBox);
 
         // Parking spaces
-        String[] parkingSpaceOptions = {"1", "2", "3"};
+        String[] parkingSpaceOptions = {" ", "1", "2", "3"};
         JLabel parkingSpace = new JLabel("Vehicles: ");
         JComboBox parkingSpaceBox = new JComboBox(parkingSpaceOptions);
         parkingSpaceBox.setSelectedItem(parking);
@@ -134,7 +172,7 @@ public class CampSpotManager {
         jPanel.add(parkingSpaceBox);
 
         // Tent spaces
-        String[] tentSpaceOptions = {"1", "2", "3"};
+        String[] tentSpaceOptions = {" ", "1", "2", "3", "4", "5"};
         JLabel tentSpace = new JLabel("Tents: ");
         JComboBox tentSpaceBox = new JComboBox(tentSpaceOptions);
         tentSpaceBox.setSelectedItem(tent);
@@ -149,7 +187,7 @@ public class CampSpotManager {
         jPanel.add(priceField);
 
         // Handicap
-        String[] handicapOptions = {"Y", "N"};
+        String[] handicapOptions = {" ", "Y", "N"};
         JLabel handicap = new JLabel("Handicap: ");
         JComboBox handicapBox = new JComboBox(handicapOptions);
         handicapBox.setSelectedItem(handicaps);
@@ -163,27 +201,43 @@ public class CampSpotManager {
         {
             public void actionPerformed(ActionEvent e)
             {
-                // Get filter Information
-                String people = recommendedPeopleBox.getSelectedItem().toString();
-                String parking = parkingSpaceBox.getSelectedItem().toString();
-                String tent = tentSpaceBox.getSelectedItem().toString();
-                //TODO: price Double checking
-                Double price = Double.parseDouble(priceField.getText());
-                String handicap = handicapBox.getSelectedItem().toString();
+                try{
+                    // Get filter Information
+                    String people = recommendedPeopleBox.getSelectedItem().toString();
+                    if (people.equals("Over 10")) people = "10";
+                    String parking = parkingSpaceBox.getSelectedItem().toString();
+                    String tent = tentSpaceBox.getSelectedItem().toString();
+                    Double price;
+                    if (priceField.getText().equals("")) price = 0.0;
+                    else price = Double.parseDouble(priceField.getText());
+                    String handicap = handicapBox.getSelectedItem().toString();
+                    setFilter(people, parking ,tent, price, handicap);
 
-                // Refresh CampSpots and CampSpotsInfo, keep same filter settings
-                frame.getContentPane().remove(drawCampSpot);
-                frame.getContentPane().remove(sidePanel);
-                drawCampSpot = drawCampSpots();
-                frame.add(drawCampSpot);
-                sidePanel = getSidePanel(people, parking, tent, price, handicap);
-                frame.add(sidePanel);
-                frame.getContentPane().invalidate();
-                frame.getContentPane().validate();
+                    // Refresh CampSpots and CampSpotsInfo, keep same filter settings
+                    frame.getContentPane().remove(drawCampSpot);
+                    frame.getContentPane().remove(sidePanel);
+                    drawCampSpot = drawCampSpots();
+                    frame.add(drawCampSpot);
+                    sidePanel = getSidePanel(people, parking, tent, price, handicap);
+                    frame.add(sidePanel);
+                    frame.getContentPane().invalidate();
+                    frame.getContentPane().validate();
+                }
+                catch (NumberFormatException er){
+                    JOptionPane.showMessageDialog(frame, "Please enter a number in price");
+                }
 
             }
         });
         return jPanel;
+    }
+
+    public void setFilter(String people, String parking, String tent, Double price, String handicap){
+        this.filterPeople = people;
+        this.filterParking = parking;
+        this.filterTent = tent;
+        this.filterPrice = price;
+        this.filterHandicap = handicap;
     }
 
     public JPanel drawCampSpotInfo(){
@@ -205,23 +259,25 @@ public class CampSpotManager {
     }
 
     public void initializeCamp(){
-        for(int i = 1; i < 9; i++){
-            campSpots.add(new CampSpot("FA" + i, 1, 4, 1, 30, false));
+        try{
+            Object obj = parser.parse(new FileReader("data\\CampSpotManager.json"));
+            JSONArray jsonArray = (JSONArray) obj;
+            System.out.println(jsonArray.size());
+            for (int i = 0; i < jsonArray.size(); i++){
+                JSONObject object = (JSONObject) jsonArray.get(i);
+                String label = object.get("label").toString();
+                int parking = Integer.parseInt(object.get("parkingSpace").toString());
+                int people = Integer.parseInt(object.get("recommendedPeople").toString());
+                int tent = Integer.parseInt(object.get("tentSpace").toString());
+                Double price = Double.parseDouble(object.get("price").toString());
+                boolean handicap = (Boolean) object.get("handicap");
+                boolean available = (Boolean) object.get("available");
+
+                campSpots.add(new CampSpot(label, parking, people, tent, price, handicap, available));
+            }
         }
-        for(int i = 1; i < 9; i++){
-            campSpots.add(new CampSpot("FB" + i, 1, 4, 1, 30, false));
-        }
-        for(int i = 1; i < 9; i++){
-            campSpots.add(new CampSpot("GA" + i, 2, 8, 2, 50, false));
-        }
-        for(int i = 1; i < 9; i++){
-            campSpots.add(new CampSpot("GB" + i, 2, 8, 3, 50, false));
-        }
-        for(int i = 1; i < 9; i++){
-            campSpots.add(new CampSpot("HA" + i, 3, 12, 4, 65, true));
-        }
-        for(int i = 1; i < 9; i++){
-            campSpots.add(new CampSpot("HB" + i, 3, 12, 5, 65, true));
+        catch(Exception e){
+            System.out.println(e);
         }
     }
 
