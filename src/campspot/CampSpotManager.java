@@ -2,6 +2,8 @@ package campspot;
 
 import UTIL.GUIUtil;
 import entity.CampSpot;
+import entity.Conf;
+import home.HomeScreen;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -11,6 +13,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.ArrayList;
 
 /**
@@ -37,6 +40,7 @@ public class CampSpotManager {
     Double filterPrice = 0.0;
     String filterHandicap = " ";
     JSONParser parser = new JSONParser();
+    CampSpot currentSpot;
 
     public CampSpotManager(){
         initializeCamp();
@@ -121,7 +125,7 @@ public class CampSpotManager {
                         // Makes current selection blue
                         String labelName = ((JButton) e.getSource()).getText();
                         previousClickedCampLabel = labelName;
-                        CampSpot currentSpot = getCampSpot(labelName);
+                        currentSpot = getCampSpot(labelName);
                         ((JButton) e.getSource()).setBackground(Color.decode("#80bfff"));
 
                         // Set Camp Spot Info
@@ -146,9 +150,63 @@ public class CampSpotManager {
         filterPanel.add(drawCampSpotInfo());
 
         JPanel nextPage = new JPanel();
-        nextPage.add(new JButton("Previous"));
-        nextPage.add(new JButton("Next"));
+        JButton cancelButton = new JButton("Cancel");
+        nextPage.add(cancelButton);
+        JButton reserveButton = new JButton("Reserve");
+        nextPage.add(reserveButton);
         filterPanel.add(nextPage);
+
+        cancelButton.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                frame.dispose();
+            }
+        });
+
+        // Add reservation to reservation.json
+        reserveButton.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                if (currentSpot == null){
+                    JOptionPane.showMessageDialog(frame, "Please select a camp spot");
+                    return;
+                }
+                try{
+                    Object obj = parser.parse(new FileReader("data\\reservation.json"));
+                    JSONObject reservations = (JSONObject) obj;
+                    JSONArray array;
+                    // If account exists
+                    if (reservations.containsKey(Conf.account)){
+                        array = (JSONArray) reservations.get(Conf.account);
+                    }
+                    else{
+                        array = new JSONArray();
+                    }
+                    // Create new Object and append to array
+                    JSONObject newReservation = new JSONObject();
+                    newReservation.put("label", currentSpot.getLabel());
+                    newReservation.put("parkingSpace", currentSpot.getParkingSpace());
+                    newReservation.put("recommendedPeople", currentSpot.getRecommendedPeople());
+                    newReservation.put("tentSpace", currentSpot.getTentSpace());
+                    newReservation.put("price", currentSpot.getPrice());
+                    newReservation.put("handicap", currentSpot.isHandicap());
+                    array.add(newReservation);
+
+                    reservations.put(Conf.account, array);
+                    FileWriter reservationFile = new FileWriter("data\\reservation.json", false);
+                    reservationFile.write(reservations.toJSONString());
+                    reservationFile.flush();
+                    reservationFile.close();
+                }
+                catch(Exception ex){
+                    System.out.println(ex);
+                }
+                JOptionPane.showMessageDialog(frame, "Your reservation has been submitted!");
+                frame.dispose();
+            }
+        });
         return filterPanel;
     }
 
@@ -222,6 +280,8 @@ public class CampSpotManager {
                     frame.add(sidePanel);
                     frame.getContentPane().invalidate();
                     frame.getContentPane().validate();
+
+                    currentSpot = null;
                 }
                 catch (NumberFormatException er){
                     JOptionPane.showMessageDialog(frame, "Please enter a number in price");
@@ -262,7 +322,6 @@ public class CampSpotManager {
         try{
             Object obj = parser.parse(new FileReader("data\\CampSpotManager.json"));
             JSONArray jsonArray = (JSONArray) obj;
-            System.out.println(jsonArray.size());
             for (int i = 0; i < jsonArray.size(); i++){
                 JSONObject object = (JSONObject) jsonArray.get(i);
                 String label = object.get("label").toString();
