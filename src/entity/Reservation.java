@@ -8,32 +8,32 @@ import java.util.Date;
  * Updated 5/23 by Sai Raghav
  */
 public class Reservation {
-    int reserveID;
+    long reserveID;
     int pricePerDay;
     Date reserveTime;
     Date startTime;
     Date endTime;
-    int userID;
-    int campSpotID;
+    String userAccount;
+
+
 
     public Reservation() {
     }
 
-    public Reservation(int reserveID, int pricePerDay, Date reserveTime, Date startTime, Date endTime, int userID, int campSpotID) {
+    public Reservation(long reserveID, int pricePerDay, Date reserveTime, Date startTime, Date endTime, String userAccount) {
         this.reserveID = reserveID;
         this.pricePerDay = pricePerDay;
         this.reserveTime = reserveTime;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.userID = userID;
-        this.campSpotID = campSpotID;
+        this.userAccount = userAccount;
     }
 
-    public int getReserveID() {
+    public long getReserveID() {
         return reserveID;
     }
 
-    public void setReserveID(int reserveID) {
+    public void setReserveID(long reserveID) {
         this.reserveID = reserveID;
     }
 
@@ -69,19 +69,12 @@ public class Reservation {
         this.endTime = endTime;
     }
 
-    public int getUserID() {
-        return userID;
+    public String getUserAccount() {
+        return userAccount;
     }
 
-    public void setUserID(int userID) {
-        this.userID = userID;
+    public void setUserAccount(String userAccount) {
+        this.userAccount = userAccount;
     }
 
-    public int getCampSpotID() {
-        return campSpotID;
-    }
-
-    public void setCampSpotID(int campSpotID) {
-        this.campSpotID = campSpotID;
-    }
 }
