@@ -174,7 +174,7 @@ public class CampSpotManager {
                     return;
                 }
                 try{
-                    Object obj = parser.parse(new FileReader("data\\reservation.json"));
+                    Object obj = parser.parse(new FileReader("data/reservation.json"));
                     JSONObject reservations = (JSONObject) obj;
                     JSONArray array;
                     // If account exists
@@ -195,7 +195,7 @@ public class CampSpotManager {
                     array.add(newReservation);
 
                     reservations.put(Conf.account, array);
-                    FileWriter reservationFile = new FileWriter("data\\reservation.json", false);
+                    FileWriter reservationFile = new FileWriter("data/reservation.json", false);
                     reservationFile.write(reservations.toJSONString());
                     reservationFile.flush();
                     reservationFile.close();
@@ -320,7 +320,7 @@ public class CampSpotManager {
 
     public void initializeCamp(){
         try{
-            Object obj = parser.parse(new FileReader("data\\CampSpotManager.json"));
+            Object obj = parser.parse(new FileReader("data/CampSpotManager.json"));
             JSONArray jsonArray = (JSONArray) obj;
             for (int i = 0; i < jsonArray.size(); i++){
                 JSONObject object = (JSONObject) jsonArray.get(i);
