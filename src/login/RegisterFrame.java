@@ -1,9 +1,8 @@
 package login;
 
-import UTIL.FileOpe;
+import UTIL.FileOpen;
 import UTIL.GUIUtil;
 import entity.Conf;
-import login.LoginFrame;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -69,7 +68,7 @@ public class RegisterFrame extends JFrame implements ActionListener {
                 return;
             }
             String account=tfAccount.getText();
-            FileOpe.getInfoByAccount(account);
+            FileOpen.getInfoByAccount(account);
             if(Conf.account!=null) {
                 JOptionPane.showMessageDialog(this,"You have already registered",
                 	    "Inane warning",
@@ -78,7 +77,7 @@ public class RegisterFrame extends JFrame implements ActionListener {
             }
             String name=tfName.getText();
             String phone=tfPhone.getText();
-            FileOpe.updateCustomer(account,password1,name,phone);
+            FileOpen.updateCustomer(account,password1,name,phone);
             JOptionPane.showMessageDialog(this,"Register Successfully");
         }
         else if(e.getSource()==btLogin) {

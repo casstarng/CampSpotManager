@@ -1,6 +1,6 @@
 package login;
 
-import UTIL.FileOpe;
+import UTIL.FileOpen;
 import UTIL.GUIUtil;
 import entity.Conf;
 
@@ -67,7 +67,7 @@ public class ModifyDialog extends  JDialog implements ActionListener {
             Conf.password=password1;
             Conf.name=name;
             Conf.phone=phone;
-            FileOpe.updateCustomer(Conf.account,password1,name,phone);
+            FileOpen.updateCustomer(Conf.account,password1,name,phone);
             JOptionPane.showMessageDialog(this,"Modified successfully");
             this.dispose();
         }

@@ -6,7 +6,7 @@ import java.io.PrintStream;
 import java.util.Properties;
 import javax.swing.JOptionPane;
 
-public class FileOpe {
+public class FileOpen {
     private static String fileName="data/userInformation.txt";
     private static Properties pps;
     static {

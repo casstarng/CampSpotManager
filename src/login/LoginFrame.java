@@ -1,6 +1,6 @@
 package login;
 
-import UTIL.FileOpe;
+import UTIL.FileOpen;
 import UTIL.GUIUtil;
 import entity.Conf;
 import home.HomeScreen;
@@ -53,7 +53,7 @@ public class LoginFrame extends JFrame implements ActionListener {
         if(e.getSource()==btLogin) {
             String account=tfAccount.getText();
             String password=new String(pfPassword.getPassword());
-            FileOpe.getInfoByAccount(account);
+            FileOpen.getInfoByAccount(account);
             if(Conf.account==null||!Conf.password.equals(password)) {
                 JOptionPane.showMessageDialog(this,"Login failed");
                 return;
