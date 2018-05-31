@@ -3,18 +3,24 @@ package campspot;
 import UTIL.GUIUtil;
 import entity.CampSpot;
 import entity.Conf;
-import home.HomeScreen;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import java.text.ParseException;
 
 import javax.swing.*;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.DateFormatter;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Cassidy Tarng on 5/4/2018.
@@ -41,6 +47,7 @@ public class CampSpotManager {
     String filterHandicap = " ";
     JSONParser parser = new JSONParser();
     CampSpot currentSpot;
+
 
     public CampSpotManager(){
         initializeCamp();
@@ -104,7 +111,7 @@ public class CampSpotManager {
                     seats[i].setBackground(Color.LIGHT_GRAY);
                 }
             }
-            else{
+            else {
                 seats[i].setBackground(firColor);
             }
             seats[i].setOpaque(true);
@@ -212,7 +219,7 @@ public class CampSpotManager {
 
     public JPanel drawFilter(String people, String parking, String tent, Double prices, String handicaps){
         JPanel jPanel = new JPanel();
-        jPanel.setLayout(new GridLayout(6, 2, 0, 10));
+        jPanel.setLayout(new GridLayout(8, 2, 0, 5));
         // Recommended people
         String[] recommendedPeopleOptions = {" ", "1", "2", "3", "4", "5", "6", "7", "8", "9", "Over 10"};
         JLabel recommendedPeople = new JLabel("People in Party: ");
@@ -252,6 +259,21 @@ public class CampSpotManager {
         jPanel.add(handicap);
         jPanel.add(handicapBox);
 
+        JLabel startDate = new JLabel("Start date: ");
+        DateFormat acceptedDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+
+        JFormattedTextField startDateTextField = new JFormattedTextField(acceptedDateFormat);
+        startDateTextField.setValue(new Date());
+
+        jPanel.add(startDate);
+        jPanel.add(startDateTextField);
+
+        JLabel endDate = new JLabel("End date: ");
+        JFormattedTextField endDateTextField = new JFormattedTextField(acceptedDateFormat);
+        jPanel.add(endDate);
+        jPanel.add(endDateTextField);
+
+
         JButton filterButton = new JButton("Filter");
         jPanel.add(filterButton);
 
@@ -270,7 +292,10 @@ public class CampSpotManager {
                     else price = Double.parseDouble(priceField.getText());
                     String handicap = handicapBox.getSelectedItem().toString();
                     setFilter(people, parking ,tent, price, handicap);
+                    Date startDate = acceptedDateFormat.parse(startDateTextField.getText());
+                    Date endDate = acceptedDateFormat.parse(endDateTextField.getText());
 
+                    //if(startDateTextField.getText().equals())
                     // Refresh CampSpots and CampSpotsInfo, keep same filter settings
                     frame.getContentPane().remove(drawCampSpot);
                     frame.getContentPane().remove(sidePanel);
@@ -283,8 +308,11 @@ public class CampSpotManager {
 
                     currentSpot = null;
                 }
-                catch (NumberFormatException er){
-                    JOptionPane.showMessageDialog(frame, "Please enter a number in price");
+                catch (NumberFormatException | ParseException er){
+                    if(er instanceof  NumberFormatException)
+                        JOptionPane.showMessageDialog(frame, "Please enter a number in price");
+                    else
+                        JOptionPane.showMessageDialog(frame, "Use mm/dd/yyyy format for dates");
                 }
 
             }

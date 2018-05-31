@@ -1,11 +1,12 @@
-[{
-  "label": "FA1",
-  "parkingSpace": 1,
-  "recommendedPeople": 4,
-  "tentSpace": 1,
-  "price": 30,
-  "handicap": false,
-  "available": true
+[
+  {
+    "label": "FA1",
+    "parkingSpace": 1,
+    "recommendedPeople": 4,
+    "tentSpace": 1,
+    "price": 30,
+    "handicap": false,
+    "available": true
   },
   {
     "label": "FA2",
@@ -15,7 +16,7 @@
     "price": 30,
     "handicap": false,
     "available": true
-},{
+  },{
   "label": "FA3",
   "parkingSpace": 1,
   "recommendedPeople": 2,
@@ -383,4 +384,5 @@
   "price": 90,
   "handicap": true,
   "available": true
-}]
+}
+]
