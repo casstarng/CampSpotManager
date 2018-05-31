@@ -9,8 +9,6 @@ import org.json.simple.parser.JSONParser;
 import java.text.ParseException;
 
 import javax.swing.*;
-import javax.swing.text.DefaultFormatterFactory;
-import javax.swing.text.DateFormatter;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -159,18 +157,22 @@ public class CampSpotManager {
         filterPanel.add(drawFilter(people, parking, tent, prices, handicaps));
         filterPanel.add(drawCampSpotInfo());
 
+        // Panel that holds compare and Reserve buttons
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new GridLayout(2, 2, 5, 50));
 
+        // Panel that holds compare
         JPanel comparePanel = new JPanel();
         comparePanel.setLayout(new GridLayout(4, 2, 20, 0));
 
+        // Panel that holds cancel and reserve
         JPanel nextPage = new JPanel();
         JButton cancelButton = new JButton("Cancel");
         nextPage.add(cancelButton);
         JButton reserveButton = new JButton("Reserve");
         nextPage.add(reserveButton);
 
+        // Compare panel information
         DateFormat acceptedDateFormat = new SimpleDateFormat("MM/dd/yyyy");
         JLabel date1Label = new JLabel("Date 1: ");
         date1Compare = new JFormattedTextField(acceptedDateFormat);
@@ -191,7 +193,7 @@ public class CampSpotManager {
         {
             public void actionPerformed(ActionEvent e)
             {
-                new CampSpotThreadController(date1Compare.getText(), date2Compare.getText());
+                new CampSpotCompareController(date1Compare.getText(), date2Compare.getText());
 
             }
         });

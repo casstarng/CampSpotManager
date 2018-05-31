@@ -18,14 +18,14 @@ import java.util.concurrent.ExecutionException;
 /**
  * Created by Cassidy Tarng on 5/31/2018.
  */
-public class CampSpotThread extends Thread {
+public class CampSpotCompare extends Thread {
 
     JFrame frame = new JFrame();
     JSONParser parser = new JSONParser();
     ArrayList<CampSpot> campSpots = new ArrayList<>();
     JButton[] seats;
 
-    public CampSpotThread(int x, int y, String date){
+    public CampSpotCompare(int x, int y, String date){
         frame.setLayout(new GridLayout(6, 8, 5, 50));
         frame.setTitle(date);
         frame.setSize(425, 850);
@@ -40,6 +40,7 @@ public class CampSpotThread extends Thread {
 
     public void run(){
         try{
+            // Initializes the CampSpot grid
             Color firColor = Color.GREEN;
 
             seats = new JButton[campSpots.size()];
@@ -61,14 +62,19 @@ public class CampSpotThread extends Thread {
             System.out.println(ex);
         }
         finally {
-            startHide();
+            startLoad();
         }
     }
 
-    public void startHide(){
+    /**
+     * Simulates a load using threads
+     */
+    public void startLoad(){
 
         SwingWorker<Boolean, Integer> worker = new SwingWorker<Boolean, Integer>() {
-
+            /**
+             * Adds a sleep to the thread
+             */
             @Override
             protected Boolean doInBackground() throws Exception {
                 for (int i = 0; i < seats.length; i++) {
@@ -78,6 +84,9 @@ public class CampSpotThread extends Thread {
                 return true;
             }
 
+            /**
+             * Updates GUI
+             */
             @Override
             protected void process(List<Integer> chunks) {
                 int latestChunk = chunks.get(chunks.size()-1);
@@ -89,6 +98,9 @@ public class CampSpotThread extends Thread {
         worker.execute();
     }
 
+    /**
+     * Gets information from CampSpotManager.json to initialize
+     */
     public void initializeCamp(){
         try{
             Object obj = parser.parse(new FileReader("data/CampSpotManager.json"));
