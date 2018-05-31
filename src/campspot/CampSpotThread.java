@@ -21,6 +21,7 @@ public class CampSpotThread extends Thread {
     JFrame frame = new JFrame();
     JSONParser parser = new JSONParser();
     ArrayList<CampSpot> campSpots = new ArrayList<>();
+    JButton currentSpot;
 
     public CampSpotThread(int x, int y){
         frame.setLayout(new GridLayout(6, 8, 5, 50));
@@ -50,11 +51,19 @@ public class CampSpotThread extends Thread {
                 seats[i].setBorderPainted(false);
                 seats[i].setBackground(firColor);
                 seats[i].setPreferredSize(new Dimension(40, 40));
-                frame.add(seats[i]);
-                sleep(10);
-                frame.repaint();
-                System.out.println(1);
+                currentSpot = seats[i];
+                frame.add(currentSpot);
+                Timer timer = new Timer(1000, new ActionListener() {
 
+                    public void actionPerformed(ActionEvent ev) {
+
+                        currentSpot.setBackground(Color.BLACK);
+                        frame.repaint();
+                    }
+                });
+
+                timer.setRepeats(false);
+                timer.start();
             }
         }
         catch (Exception ex){
