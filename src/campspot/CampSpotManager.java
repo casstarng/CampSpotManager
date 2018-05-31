@@ -47,6 +47,8 @@ public class CampSpotManager {
     String filterHandicap = " ";
     JSONParser parser = new JSONParser();
     CampSpot currentSpot;
+    Date startDate = null;
+    Date endDate = null;
 
 
     public CampSpotManager(){
@@ -193,12 +195,17 @@ public class CampSpotManager {
                     }
                     // Create new Object and append to array
                     JSONObject newReservation = new JSONObject();
-                    newReservation.put("label", currentSpot.getLabel());
-                    newReservation.put("parkingSpace", currentSpot.getParkingSpace());
-                    newReservation.put("recommendedPeople", currentSpot.getRecommendedPeople());
-                    newReservation.put("tentSpace", currentSpot.getTentSpace());
-                    newReservation.put("price", currentSpot.getPrice());
-                    newReservation.put("handicap", currentSpot.isHandicap());
+                    newReservation.put("pricePerDay", currentSpot.getPrice());
+                    if(startDate == null)
+                    newReservation.put("startTime", startDate);
+                    newReservation.put("endTime", endDate);
+                    JSONObject campSpotData = new JSONObject();
+                    campSpotData.put("label", currentSpot.getLabel());
+                    campSpotData.put("parkingSpace", currentSpot.getParkingSpace());
+                    campSpotData.put("recommendedPeople", currentSpot.getRecommendedPeople());
+                    campSpotData.put("tentSpace", currentSpot.getTentSpace());
+                    campSpotData.put("handicap", currentSpot.isHandicap());
+                    newReservation.put("campSpot", campSpotData);
                     array.add(newReservation);
 
                     reservations.put(Conf.account, array);
@@ -291,9 +298,10 @@ public class CampSpotManager {
                     if (priceField.getText().equals("")) price = 0.0;
                     else price = Double.parseDouble(priceField.getText());
                     String handicap = handicapBox.getSelectedItem().toString();
-                    setFilter(people, parking ,tent, price, handicap);
                     Date startDate = acceptedDateFormat.parse(startDateTextField.getText());
                     Date endDate = acceptedDateFormat.parse(endDateTextField.getText());
+                    setFilter(people, parking ,tent, price, handicap, startDate, endDate);
+
 
                     //if(startDateTextField.getText().equals())
                     // Refresh CampSpots and CampSpotsInfo, keep same filter settings
@@ -320,12 +328,14 @@ public class CampSpotManager {
         return jPanel;
     }
 
-    public void setFilter(String people, String parking, String tent, Double price, String handicap){
+    public void setFilter(String people, String parking, String tent, Double price, String handicap, Date startDate, Date endDate){
         this.filterPeople = people;
         this.filterParking = parking;
         this.filterTent = tent;
         this.filterPrice = price;
         this.filterHandicap = handicap;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public JPanel drawCampSpotInfo(){
