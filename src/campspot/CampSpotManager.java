@@ -163,7 +163,19 @@ public class CampSpotManager {
         nextPage.add(cancelButton);
         JButton reserveButton = new JButton("Reserve");
         nextPage.add(reserveButton);
+        JButton threadButton = new JButton("Thread");
+        nextPage.add(threadButton);
+
         filterPanel.add(nextPage);
+
+        threadButton.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                new CampSpotThreadController();
+
+            }
+        });
 
         cancelButton.addActionListener(new ActionListener()
         {
