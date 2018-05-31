@@ -1,2 +1,18 @@
 {
+  "aaa": [
+    {
+      "pricePerDay" : 85.0,
+      "reserveTime" : "05/29/2018",
+      "startTime" : "05/30/2018",
+      "endTime" : "05/31/2018",
+      "campspot" : {
+        "tentSpace" : 4,
+        "price" : 85.0,
+        "handicap" : false,
+        "label" : "HA3",
+        "parkingSpace" : 3,
+        "recommendedPeople" : 9
+      }
+    }
+  ]
 }
