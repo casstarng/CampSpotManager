@@ -25,9 +25,9 @@ public class CampSpotThread extends Thread {
     ArrayList<CampSpot> campSpots = new ArrayList<>();
     JButton[] seats;
 
-    public CampSpotThread(int x, int y){
+    public CampSpotThread(int x, int y, String date){
         frame.setLayout(new GridLayout(6, 8, 5, 50));
-        frame.setTitle("Camp Spot Manager");
+        frame.setTitle(date);
         frame.setSize(425, 850);
         frame.setVisible(true);
         frame.setResizable(false);
@@ -72,7 +72,7 @@ public class CampSpotThread extends Thread {
             @Override
             protected Boolean doInBackground() throws Exception {
                 for (int i = 0; i < seats.length; i++) {
-                    Thread.sleep(500);
+                    Thread.sleep(100);
                     publish(i);
                 }
                 return true;
@@ -111,28 +111,4 @@ public class CampSpotThread extends Thread {
         }
     }
 
-    public JPanel drawCampSpots(){
-        JPanel campSpotPanel = new JPanel();
-        campSpotPanel.setPreferredSize(new Dimension(300, 300));
-        campSpotPanel.setLayout(new GridLayout(6, 8, 5, 50));
-
-        Color firColor = Color.GREEN;
-
-        JButton[] seats = new JButton[campSpots.size()];
-
-        for (int i = 0; i < seats.length; i++) {
-            CampSpot spot = campSpots.get(i);
-            seats[i] = new JButton(spot.getLabel());
-
-            seats[i].setOpaque(true);
-            seats[i].setBorder(null);
-            seats[i].setBorderPainted(false);
-            seats[i].setBackground(firColor);
-            seats[i].setPreferredSize(new Dimension(40, 40));
-            frame.add(seats[i]);
-
-        }
-
-        return campSpotPanel;
-    }
 }

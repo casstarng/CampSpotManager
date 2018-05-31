@@ -49,6 +49,7 @@ public class CampSpotManager {
     CampSpot currentSpot;
     Date startDate = null;
     Date endDate = null;
+    JFormattedTextField date1Compare, date2Compare;
 
 
     public CampSpotManager(){
@@ -158,21 +159,39 @@ public class CampSpotManager {
         filterPanel.add(drawFilter(people, parking, tent, prices, handicaps));
         filterPanel.add(drawCampSpotInfo());
 
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.setLayout(new GridLayout(2, 2, 5, 50));
+
+        JPanel comparePanel = new JPanel();
+        comparePanel.setLayout(new GridLayout(4, 2, 20, 0));
+
         JPanel nextPage = new JPanel();
         JButton cancelButton = new JButton("Cancel");
         nextPage.add(cancelButton);
         JButton reserveButton = new JButton("Reserve");
         nextPage.add(reserveButton);
-        JButton threadButton = new JButton("Thread");
-        nextPage.add(threadButton);
 
-        filterPanel.add(nextPage);
+        DateFormat acceptedDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        JLabel date1Label = new JLabel("Date 1: ");
+        date1Compare = new JFormattedTextField(acceptedDateFormat);
+        JLabel date2Label = new JLabel("Date 2: ");
+        date2Compare = new JFormattedTextField(acceptedDateFormat);
+        comparePanel.add(date1Label);
+        comparePanel.add(date1Compare);
+        comparePanel.add(date2Label);
+        comparePanel.add(date2Compare);
+        JButton threadButton = new JButton("Compare");
+        comparePanel.add(threadButton);
+
+        bottomPanel.add(comparePanel);
+        bottomPanel.add(nextPage);
+        filterPanel.add(bottomPanel);
 
         threadButton.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
             {
-                new CampSpotThreadController();
+                new CampSpotThreadController(date1Compare.getText(), date2Compare.getText());
 
             }
         });
