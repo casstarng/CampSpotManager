@@ -7,18 +7,17 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicToolTipUI;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.io.FileWriter;
 
 /**
  * Created by Cassidy Tarng on 5/4/2018.
  */
-public class ReservationManager extends JFrame{
+public class ReservationManager extends JFrame implements ActionListener{
     private JSONParser parser = new JSONParser();
 
     private JSONObject reservations;
@@ -52,7 +51,7 @@ public class ReservationManager extends JFrame{
             data[i][4] = campObject.get("label");
             data[i][5] = campObject.get("tentSpace");
             data[i][6] = campObject.get("parkingSpace");
-            data[i][7] = campObject.get("handicap");
+            data[i][7] = !(boolean) campObject.get("handicap") ? "No" : "Yes";
             data[i][8] = campObject.get("recommendedPeople");
         }
 
@@ -68,6 +67,8 @@ public class ReservationManager extends JFrame{
 
         editButton = new JButton("Edit");
         deleteButton = new JButton("delete");
+        editButton.addActionListener(this);
+        deleteButton.addActionListener(this);
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridBagLayout());
@@ -79,14 +80,12 @@ public class ReservationManager extends JFrame{
 
         constraints.gridx = 1;
         buttonPanel.add(deleteButton, constraints);
-
         add(buttonPanel, BorderLayout.SOUTH);
 
         setTitle("Your Reservation");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(500, 500);
+        setSize(1000, 500);
         GUIUtil.toCenter(this);
-        pack();
         setVisible(true);
 
     }
@@ -100,5 +99,45 @@ public class ReservationManager extends JFrame{
 
         }
         return null;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(e.getSource() == editButton){
+            edit();
+        }else if (e.getSource() == deleteButton){
+            delete();
+        }
+    }
+
+    private void edit(){
+        int row = table.getSelectedRow();
+        System.out.println("Select row : " + row);
+    }
+
+    private void delete(){
+        int row = table.getSelectedRow();
+        reservationArray.remove(row);
+
+        reservations.put(Conf.account, reservationArray);
+
+        try {
+            FileWriter reservationFile = new FileWriter("data/reservation.json", false);
+            reservationFile.write(reservations.toJSONString());
+            reservationFile.flush();
+            reservationFile.close();
+
+            tableModel.removeRow(row);
+            tableModel.fireTableDataChanged();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+    }
+
+    private void updateData(){
+
     }
 }
