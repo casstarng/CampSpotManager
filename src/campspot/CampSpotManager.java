@@ -18,6 +18,7 @@ import java.io.FileWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -45,7 +46,8 @@ public class CampSpotManager {
     String filterHandicap = " ";
     JSONParser parser = new JSONParser();
     CampSpot currentSpot;
-    Date startDate = null;
+    DateFormat acceptedDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+    Date startDate = new Date(); // store today's date on startDate if user doesn't specify.
     Date endDate = null;
     JFormattedTextField date1Compare, date2Compare;
 
@@ -87,9 +89,15 @@ public class CampSpotManager {
             CampSpot spot = campSpots.get(i);
             seats[i] = new JButton(spot.getLabel());
             // Disable if spot is unavailable
-            if (spot.getAvailability() == false) {
-                seats[i].setEnabled(false);
-                seats[i].setBackground(Color.LIGHT_GRAY);
+            if (spot.getDatesReserved().length > 0) {
+                for (String date: spot.getDatesReserved()){
+                    if (acceptedDateFormat.format(startDate).equals(date)) {
+                        seats[i].setEnabled(false);
+                        seats[i].setBackground(Color.LIGHT_GRAY);
+                    } else {
+                        seats[i].setBackground(firColor);
+                    }
+                }
             }
             // filter recommended people
             else if ((!filterPeople.equals(" ") && spot.getRecommendedPeople() < Integer.parseInt(filterPeople)) ||
@@ -217,7 +225,9 @@ public class CampSpotManager {
                 }
                 try{
                     Object obj = parser.parse(new FileReader("data/reservation.json"));
+                    Object campSpotParser = parser.parse(new FileReader("data/CampSpotManager.json"));
                     JSONObject reservations = (JSONObject) obj;
+                    JSONArray campsArr = (JSONArray) campSpotParser;
                     JSONArray array;
                     // If account exists
                     if (reservations.containsKey(Conf.account)){
@@ -229,9 +239,14 @@ public class CampSpotManager {
                     // Create new Object and append to array
                     JSONObject newReservation = new JSONObject();
                     newReservation.put("pricePerDay", currentSpot.getPrice());
-                    if(startDate == null)
-                    newReservation.put("startTime", startDate);
-                    newReservation.put("endTime", endDate);
+                    newReservation.put("startTime", acceptedDateFormat.format(startDate));
+                    if (endDate == null) {
+                        String tempEndDate = acceptedDateFormat.format(getNextDate(startDate));
+                        endDate = acceptedDateFormat.parse(tempEndDate);
+                    }
+                    //System.out.println(endDate);
+                    newReservation.put("endTime", acceptedDateFormat.format(endDate));
+                    newReservation.put("reserveTime", acceptedDateFormat.format(new Date()));
                     JSONObject campSpotData = new JSONObject();
                     campSpotData.put("label", currentSpot.getLabel());
                     campSpotData.put("parkingSpace", currentSpot.getParkingSpace());
@@ -241,11 +256,25 @@ public class CampSpotManager {
                     newReservation.put("campSpot", campSpotData);
                     array.add(newReservation);
 
+                    for (int i = 0; i<campsArr.size(); i++) {
+                        JSONObject currCamp = (JSONObject) campsArr.get(i);
+                        if(currCamp.get("label").equals(currentSpot.getLabel())) {
+                            JSONArray datesForReservation = (JSONArray) currCamp.get("reservations");
+                            ArrayList<Date> datesReserved = getDatesBetween(startDate, endDate);
+                            for (Date currDate: datesReserved)
+                                datesForReservation.add(acceptedDateFormat.format(currDate));
+                        }
+                    }
+
                     reservations.put(Conf.account, array);
                     FileWriter reservationFile = new FileWriter("data/reservation.json", false);
+                    FileWriter campManagerFile = new FileWriter("data/CampSpotManager.json", false);
                     reservationFile.write(reservations.toJSONString());
                     reservationFile.flush();
                     reservationFile.close();
+                    campManagerFile.write(campsArr.toJSONString());
+                    campManagerFile.flush();
+                    campManagerFile.close();
                 }
                 catch(Exception ex){
                     System.out.println(ex);
@@ -255,6 +284,23 @@ public class CampSpotManager {
             }
         });
         return filterPanel;
+    }
+
+    private static ArrayList<Date> getDatesBetween(Date startDate, Date endDate) {
+        ArrayList<Date> datesInRange = new ArrayList<>();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(startDate);
+
+        Calendar endCalendar = Calendar.getInstance();
+        endCalendar.setTime(endDate);
+
+        while (calendar.before(endCalendar)) {
+            Date result = calendar.getTime();
+            datesInRange.add(result);
+            calendar.add(Calendar.DATE, 1);
+        }
+        datesInRange.add(endDate);
+        return datesInRange;
     }
 
     public JPanel drawFilter(String people, String parking, String tent, Double prices, String handicaps){
@@ -300,16 +346,19 @@ public class CampSpotManager {
         jPanel.add(handicapBox);
 
         JLabel startDate = new JLabel("Start date: ");
-        DateFormat acceptedDateFormat = new SimpleDateFormat("MM/dd/yyyy");
 
         JFormattedTextField startDateTextField = new JFormattedTextField(acceptedDateFormat);
-        startDateTextField.setValue(new Date());
+        startDateTextField.setValue(this.startDate);
 
         jPanel.add(startDate);
         jPanel.add(startDateTextField);
 
         JLabel endDate = new JLabel("End date: ");
         JFormattedTextField endDateTextField = new JFormattedTextField(acceptedDateFormat);
+        if(this.endDate != null) {
+            endDateTextField.setValue(this.endDate);
+        }
+
         jPanel.add(endDate);
         jPanel.add(endDateTextField);
 
@@ -331,8 +380,16 @@ public class CampSpotManager {
                     if (priceField.getText().equals("")) price = 0.0;
                     else price = Double.parseDouble(priceField.getText());
                     String handicap = handicapBox.getSelectedItem().toString();
-                    Date startDate = acceptedDateFormat.parse(startDateTextField.getText());
-                    Date endDate = acceptedDateFormat.parse(endDateTextField.getText());
+                    Date tempStartDate = acceptedDateFormat.parse(startDateTextField.getText());
+                    String tempStartDateStr = acceptedDateFormat.format(tempStartDate);
+                    System.out.println("this is temp date str " + tempStartDateStr);
+                    Date startDate = acceptedDateFormat.parse(tempStartDateStr);
+                    System.out.println("this is start date " + startDate);
+                    Date endDate;
+                    if(endDateTextField.getText().isEmpty())
+                        endDate = getNextDate(startDate);
+                    else
+                        endDate = acceptedDateFormat.parse(endDateTextField.getText());
                     setFilter(people, parking ,tent, price, handicap, startDate, endDate);
 
 
@@ -401,14 +458,32 @@ public class CampSpotManager {
                 int tent = Integer.parseInt(object.get("tentSpace").toString());
                 Double price = Double.parseDouble(object.get("price").toString());
                 boolean handicap = (Boolean) object.get("handicap");
-                boolean available = (Boolean) object.get("available");
-
-                campSpots.add(new CampSpot(label, parking, people, tent, price, handicap, available));
+                JSONArray datesReserved = (JSONArray) object.get("reservations");
+                //System.out.println("number of dates this camp, " + i + "is booked for " + datesReserved.size());
+                String[] datesReservedCamp = new String[datesReserved.size()];
+                for(int j = 0; j < datesReserved.size(); j++) {
+                    String strDateFromJson = (String) datesReserved.get(j);
+                    datesReservedCamp[j] = strDateFromJson;
+                }
+                campSpots.add(new CampSpot(label, parking, people, tent, price, handicap, datesReservedCamp));
             }
         }
         catch(Exception e){
             System.out.println(e);
         }
+    }
+
+    /**
+     * Utility function to increment today's date for default storage.
+     * @param tempDate
+     * @return
+     */
+    private Date getNextDate(Date tempDate) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(tempDate);
+        c.add(Calendar.DATE, 1);
+        Date nextDate = c.getTime();
+        return nextDate;
     }
 
     public CampSpot getCampSpot(String label){

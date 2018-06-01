@@ -113,9 +113,14 @@ public class CampSpotCompare extends Thread {
                 int tent = Integer.parseInt(object.get("tentSpace").toString());
                 Double price = Double.parseDouble(object.get("price").toString());
                 boolean handicap = (Boolean) object.get("handicap");
-                boolean available = (Boolean) object.get("available");
-
-                campSpots.add(new CampSpot(label, parking, people, tent, price, handicap, available));
+                JSONArray datesReserved = (JSONArray) object.get("reservations");
+                //System.out.println("number of dates this camp, " + i + "is booked for " + datesReserved.size());
+                String[] datesReservedCamp = new String[datesReserved.size()];
+                for(int j = 0; j < datesReserved.size(); j++) {
+                    String strDateFromJson = (String) datesReserved.get(j);
+                    datesReservedCamp[j] = strDateFromJson;
+                }
+                campSpots.add(new CampSpot(label, parking, people, tent, price, handicap, datesReservedCamp));
             }
         }
         catch(Exception e){
