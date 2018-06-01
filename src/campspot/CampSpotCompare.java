@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -24,8 +25,10 @@ public class CampSpotCompare extends Thread {
     JSONParser parser = new JSONParser();
     ArrayList<CampSpot> campSpots = new ArrayList<>();
     JButton[] seats;
+    String date;
 
     public CampSpotCompare(int x, int y, String date){
+        this.date = date;
         frame.setLayout(new GridLayout(6, 8, 5, 50));
         frame.setTitle(date);
         frame.setSize(425, 850);
@@ -54,6 +57,10 @@ public class CampSpotCompare extends Thread {
                 seats[i].setBorderPainted(false);
                 seats[i].setBackground(firColor);
                 seats[i].setPreferredSize(new Dimension(40, 40));
+                if (Arrays.asList(spot.getDatesReserved()).contains(date)){
+                    seats[i].setEnabled(false);
+                    seats[i].setBackground(Color.LIGHT_GRAY);
+                }
                 seats[i].setVisible(false);
                 frame.add(seats[i]);
             }

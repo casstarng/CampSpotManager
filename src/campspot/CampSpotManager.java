@@ -201,7 +201,12 @@ public class CampSpotManager {
         {
             public void actionPerformed(ActionEvent e)
             {
-                new CampSpotCompareController(date1Compare.getText(), date2Compare.getText());
+                if (date1Compare.getText().equals("") || date2Compare.getText().equals("")){
+                    JOptionPane.showMessageDialog(frame, "Please enter 2 dates to compare");
+                }
+                else {
+                    new CampSpotCompareController(date1Compare.getText(), date2Compare.getText());
+                }
 
             }
         });
