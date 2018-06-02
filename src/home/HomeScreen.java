@@ -1,7 +1,7 @@
 package home;
 
 import UTIL.GUIUtil;
-import campspot.*;
+import campspot.CampSpotManager;
 import entity.Conf;
 import login.ModifyDialog;
 import reservation.ReservationManager;

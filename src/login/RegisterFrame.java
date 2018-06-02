@@ -4,15 +4,10 @@ import UTIL.FileOpen;
 import UTIL.GUIUtil;
 import entity.Conf;
 
-import java.awt.FlowLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
 
 public class RegisterFrame extends JFrame implements ActionListener {
     /**********************components********************************/

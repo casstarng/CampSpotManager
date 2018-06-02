@@ -1,0 +1,52 @@
+{
+  "rag": [
+    {
+      "tentSpace": 4,
+      "price": 85.0,
+      "handicap": false,
+      "label": "HA7",
+      "parkingSpace": 3,
+      "recommendedPeople": 9
+    },
+    {
+      "tentSpace": 3,
+      "price": 70.0,
+      "handicap": false,
+      "label": "GB2",
+      "parkingSpace": 2,
+      "recommendedPeople": 8
+    },
+    {
+      "tentSpace": 4,
+      "price": 80.0,
+      "handicap": false,
+      "label": "HA2",
+      "parkingSpace": 3,
+      "recommendedPeople": 9
+    },
+    {
+      "campSpot": {
+        "tentSpace": 3,
+        "handicap": true,
+        "label": "GA8",
+        "parkingSpace": 2,
+        "recommendedPeople": 8
+      },
+      "startTime": null,
+      "endTime": null,
+      "pricePerDay": 70.0
+    },
+    {
+      "campSpot": {
+        "tentSpace": 5,
+        "handicap": true,
+        "label": "HB8",
+        "parkingSpace": 3,
+        "recommendedPeople": 12
+      },
+      "startTime": "05\/31\/2018",
+      "endTime": "06\/01\/2018",
+      "pricePerDay": 90.0
+    }
+  ]
+}

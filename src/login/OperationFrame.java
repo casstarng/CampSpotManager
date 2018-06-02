@@ -2,15 +2,11 @@ package login;
 
 import UTIL.GUIUtil;
 import entity.Conf;
-import login.ModifyDialog;
 
-import java.awt.GridLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JFrame;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 
 public class OperationFrame extends JFrame implements ActionListener {
     private String welcomMsg="Plese Select:";

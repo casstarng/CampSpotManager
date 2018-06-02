@@ -6,16 +6,15 @@ import entity.Conf;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import java.text.ParseException;
 
 import javax.swing.*;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -92,8 +91,11 @@ public class CampSpotManager {
             if (spot.getDatesReserved().length > 0) {
                 for (String date: spot.getDatesReserved()){
                     if (acceptedDateFormat.format(startDate).equals(date)) {
-                        seats[i].setEnabled(false);
                         seats[i].setBackground(Color.LIGHT_GRAY);
+
+                        System.out.println("Reservations present");
+                        seats[i].setEnabled(false);
+                        break;
                     } else {
                         seats[i].setBackground(firColor);
                     }

@@ -5,17 +5,10 @@ import UTIL.GUIUtil;
 import entity.Conf;
 import home.HomeScreen;
 
-import java.awt.FlowLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.Icon;
-import javax.swing.JOptionPane;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPasswordField;
-import javax.swing.JButton;
-import javax.swing.JTextField;
 
 public class LoginFrame extends JFrame implements ActionListener {
     private Icon welcomeIcon=new ImageIcon("data/AR-CAMP.png");

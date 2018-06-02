@@ -4,16 +4,10 @@ import UTIL.FileOpen;
 import UTIL.GUIUtil;
 import entity.Conf;
 
-import java.awt.GridLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JFrame;
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
 
 public class ModifyDialog extends  JDialog implements ActionListener {
     private JLabel lbMsg=new JLabel("Your ID：");
