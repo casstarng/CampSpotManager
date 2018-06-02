@@ -10,16 +10,17 @@ public class CampSpot {
     int tentSpace;
     double price;
     boolean handicap;
-    boolean available;
+    String[] datesReserved;
 
-    public CampSpot(String label, int parkingSpace, int recommendedPeople, int tentSpace, double price, boolean handicap, boolean available) {
+    public CampSpot(String label, int parkingSpace, int recommendedPeople,
+        int tentSpace, double price, boolean handicap, String[] datesReserved) {
         this.label = label;
         this.parkingSpace = parkingSpace;
         this.recommendedPeople = recommendedPeople;
         this.tentSpace = tentSpace;
         this.price = price;
         this.handicap = handicap;
-        this.available = available;
+        this.datesReserved = datesReserved;
         campSpotID = UUID.randomUUID();
     }
 
@@ -71,7 +72,7 @@ public class CampSpot {
         return label;
     }
 
-    public boolean getAvailability() {return available;}
-
-    public void setAvailability(boolean available) {this.available = available;}
+    public String[] getDatesReserved() {
+            return datesReserved;
+    }
 }
