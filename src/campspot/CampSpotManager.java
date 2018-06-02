@@ -111,11 +111,13 @@ public class CampSpotManager {
                     (filterPrice != 0.0 && spot.getPrice() > filterPrice) ||
                     // filter handicap
                     (!filterHandicap.equals(" "))){
-
+                seats[i].setBackground(Color.LIGHT_GRAY);
+                seats[i].setEnabled(false);
                 // filter handicap
                 if ((filterHandicap.equals("Y") && spot.isHandicap() == true) ||
                         (filterHandicap.equals("N") && spot.isHandicap() == false)){
                     seats[i].setBackground(firColor);
+                    seats[i].setEnabled(true);
                 }
                 else {
                     seats[i].setEnabled(false);
