@@ -25,11 +25,11 @@ public class ReservationManager extends JFrame implements ActionListener{
     private JTable table;
     private DefaultTableModel tableModel;
 
-    private JButton editButton;
+    //private JButton editButton;
     private JButton deleteButton;
 
     private String[] columns = {"pricePerDay", "reserveTime", "startTime", "endTime",
-                                "label", "tentSpace", "parkingSpace", "handicap", "c"};
+                                "label", "tentSpace", "parkingSpace", "handicap", "recommendedPeople"};
     private Object[][] data;
 
     public ReservationManager(){
@@ -40,20 +40,25 @@ public class ReservationManager extends JFrame implements ActionListener{
 
 
         reservationArray =  (JSONArray) reservations.get(Conf.account);
-        data = new Object[reservationArray.size()][9];
-        for(int i = 0; i < reservationArray.size(); i++){
-            JSONObject jsonObject = (JSONObject) reservationArray.get(i);
-            JSONObject campObject = (JSONObject) jsonObject.get("campspot");
-            data[i][0] = jsonObject.get("pricePerDay");
-            data[i][1] = jsonObject.get("reserveTime");
-            data[i][2] = jsonObject.get("startTime");
-            data[i][3] = jsonObject.get("endTime");
-            data[i][4] = campObject.get("label");
-            data[i][5] = campObject.get("tentSpace");
-            data[i][6] = campObject.get("parkingSpace");
-            data[i][7] = !(boolean) campObject.get("handicap") ? "No" : "Yes";
-            data[i][8] = campObject.get("recommendedPeople");
+        if (reservationArray == null){
+            data = new Object[0][9];
+        }else{
+            data = new Object[reservationArray.size()][9];
+            for(int i = 0; i < reservationArray.size(); i++){
+                JSONObject jsonObject = (JSONObject) reservationArray.get(i);
+                JSONObject campObject = (JSONObject) jsonObject.get("campSpot");
+                data[i][0] = jsonObject.get("pricePerDay");
+                data[i][1] = jsonObject.get("reserveTime");
+                data[i][2] = jsonObject.get("startTime");
+                data[i][3] = jsonObject.get("endTime");
+                data[i][4] = campObject.get("label");
+                data[i][5] = campObject.get("tentSpace");
+                data[i][6] = campObject.get("parkingSpace");
+                data[i][7] = !(boolean) campObject.get("handicap") ? "No" : "Yes";
+                data[i][8] = campObject.get("recommendedPeople");
+            }
         }
+
 
         tableModel = new DefaultTableModel(data, columns);
         table = new JTable(tableModel);
@@ -65,9 +70,9 @@ public class ReservationManager extends JFrame implements ActionListener{
 
         add(scrollPane, BorderLayout.CENTER);
 
-        editButton = new JButton("Edit");
+        //editButton = new JButton("Edit");
         deleteButton = new JButton("delete");
-        editButton.addActionListener(this);
+        //editButton.addActionListener(this);
         deleteButton.addActionListener(this);
 
         JPanel buttonPanel = new JPanel();
@@ -76,9 +81,7 @@ public class ReservationManager extends JFrame implements ActionListener{
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.fill = GridBagConstraints.BOTH;
-        buttonPanel.add(editButton, constraints);
-
-        constraints.gridx = 1;
+        //buttonPanel.add(editButton, constraints);
         buttonPanel.add(deleteButton, constraints);
         add(buttonPanel, BorderLayout.SOUTH);
 
@@ -103,9 +106,7 @@ public class ReservationManager extends JFrame implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == editButton){
-            edit();
-        }else if (e.getSource() == deleteButton){
+        if (e.getSource() == deleteButton){
             delete();
         }
     }
@@ -117,6 +118,10 @@ public class ReservationManager extends JFrame implements ActionListener{
 
     private void delete(){
         int row = table.getSelectedRow();
+        if (row == -1){
+            JOptionPane.showMessageDialog(this,"Please select one record!");
+            return;
+        }
         reservationArray.remove(row);
 
         reservations.put(Conf.account, reservationArray);
